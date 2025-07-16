@@ -29,7 +29,7 @@ import currentViewState from "@/recoil/atom";
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url} onClick={() => setCurrentView(item.title as any)}>
+                    <a onClick={() => setCurrentView(item.title as any)}>
                       <item.icon />
                       <span>{item.title}</span>
                     </a>
