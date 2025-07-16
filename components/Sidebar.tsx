@@ -14,7 +14,7 @@ import {
 
 import { items } from "@/constants"
 import { useSetRecoilState } from "recoil"
-import currentViewState from "@/recoil/atom";
+import currentViewState from "@/recoil/currentviewAtom";
   
   export function AppSidebar() {
     const setCurrentView = useSetRecoilState(currentViewState);

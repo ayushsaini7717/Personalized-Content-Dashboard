@@ -1,7 +1,7 @@
 "use client";
 import React from 'react'
 import { useRecoilValue } from 'recoil'
-import currentViewState from '@/recoil/atom'
+import currentViewState from '@/recoil/currentviewAtom'
 import Feed from '@/components/Feed';
 import Trending from '@/components/Trending';
 import Favorites from '@/components/Favorites';
