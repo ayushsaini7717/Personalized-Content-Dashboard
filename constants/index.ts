@@ -1,4 +1,4 @@
-import { Home, Search, Settings,TrendingUp,Star } from "lucide-react"
+import { Home, Search, Settings,TrendingUp,Heart } from "lucide-react"
 
 export const items = [
     {
@@ -11,7 +11,7 @@ export const items = [
     },
     {
       title: "Favorites",
-      icon: Star,
+      icon: Heart,
     },
     {
       title: "Search",

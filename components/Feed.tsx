@@ -5,6 +5,8 @@ import { useRecoilState } from 'recoil';
 import feedDataState from '@/recoil/feedDataAtom';
 import ContentCard from './Card';
 import CardSkeleton from './CardSkeleton';
+import { motion } from 'framer-motion';
+import {Rss} from 'lucide-react';
 
 const mockData = [
   {
@@ -406,8 +408,22 @@ const Feed = () => {
     }, [setFeed]);
   
     return (
-      <div>
-        <h2 className="text-2xl font-bold mb-4">Your Personalized Feed</h2>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: 'easeInOut' }}
+      >
+        <div className="border-b border-gray-200 dark:border-gray-700 mb-6 pb-4 flex gap-2 items-center">
+        <div>
+          <Rss className="w-8 h-8 text-blue-500" />
+        </div>
+        <div>
+          <h2 className="text-2xl font-bold mb-2">Your Personalized Feed</h2>
+          <h4 className="text-sm font-bold text-gray-600 dark:text-gray-300">
+          Content curated based on your preferences
+          </h4>
+        </div>
+      </div>
         <div className="relative top-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
           {loading ? (
             Array(24).fill(0).map((_, index) => (
@@ -418,6 +434,7 @@ const Feed = () => {
           ) : (
             feed.map((item) => (
               <ContentCard
+                id={item.article_id}
                 key={item.article_id}
                 title={item.title}
                 description={item.description}
@@ -426,7 +443,7 @@ const Feed = () => {
             ))
           )}
         </div>
-      </div>
+      </motion.div>
     );
   };
 

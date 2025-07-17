@@ -1,24 +1,75 @@
+"use client";
+import { Heart } from 'lucide-react';
+import { useRecoilState } from 'recoil';
+import favoritesState from '@/recoil/favoriteListAtom';
+import { motion } from "framer-motion";
+
 type Props = {
+    id: string;
     title: string;
     description: string;
     imageUrl?: string;
+    frameUrl?: string;
+    pubDate?: string;
+    keywords? : string;
     onClick?: () => void;
 };
   
-const ContentCard = ({ title, description, imageUrl, onClick }: Props) => {
+const ContentCard = ({id, title, description, imageUrl, onClick ,frameUrl,pubDate,keywords}: Props) => {
+    const [favorites, setFavorites] = useRecoilState(favoritesState);
+    const isFavorited = favorites.some((item) => item.id === id);
+
+    const toggleFavorite = () => {
+      if (isFavorited) {
+        setFavorites(favorites.filter((item) => item.id !== id));
+      } else {
+        setFavorites((prev) => [...prev, { id, title, description, imageUrl }]);
+      }
+    };
     return (
-      <div
-        onClick={onClick}
-        className="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200 cursor-pointer"
+      <motion.div
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        className="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200 flex flex-col h-full"
       >
-        {imageUrl && (
+        {imageUrl ? (
           <img src={imageUrl} alt={title} className="w-full h-48 object-cover" />
-        )}
-        <div className="p-4">
-          <h3 className="text-lg font-bold mb-2">{title}</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">{description}</p>
+        ) : <div className="relative w-full h-48">
+          <div className="absolute top-2 left-2 z-10 bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded shadow">
+            {keywords}
+          </div>
+      
+        <iframe
+          src={frameUrl}
+          className="w-full h-full object-cover rounded"
+         
+          allowFullScreen
+        ></iframe>
+      </div>}
+
+        <div className="p-4 flex-grow space-y-2">
+          <div className="flex justify-between items-start">
+            <h3 className="text-lg font-bold">{title}</h3>
+          </div>
+          <p className="text-sm text-gray-600 dark:text-gray-300"> {(description || "No description available").slice(0, 300)}
+          {(description && description.length > 300) ? "..." : null}</p>
         </div>
-      </div>
+
+        <div className="p-4 pt-0 flex justify-between items-center">
+          <button className='flex gap-2 items-center hover:bg-gray-50 transition ease-in-out p-2 rounded cursor-pointer' onClick={toggleFavorite}>
+            {isFavorited ? (
+              <Heart className="w-5 h-5 text-red-500" fill="red" />
+            ) : (
+              <Heart className="w-5 h-5 text-gray-500" />
+            )}
+            <span className='text-sm text-gray-700 font-semibold'>
+              Favorite
+            </span>
+          </button>
+          <div className='text-gray-500 text-sm font-semibold'>{pubDate}</div>
+        </div>
+      </motion.div>
+
     );
 };
   
