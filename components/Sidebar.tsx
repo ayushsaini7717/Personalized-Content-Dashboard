@@ -19,11 +19,18 @@ import currentViewState from "@/recoil/currentviewAtom";
   export function AppSidebar() {
     const setCurrentView = useSetRecoilState(currentViewState);
     return (
-      <Sidebar>
+      <Sidebar className="mt-[6vh]">
         <SidebarHeader />
         <SidebarContent>
           <SidebarGroup />
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel className="flex flex-col items-start gap-1">
+            <h1>
+              Dashboard
+            </h1>
+            <span>
+              Your personalized content hub
+            </span>
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (

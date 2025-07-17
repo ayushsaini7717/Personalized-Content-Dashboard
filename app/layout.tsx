@@ -1,7 +1,7 @@
 "use client";
 import "./globals.css";
 import { RecoilRoot } from "recoil";
-
+import Navbar from "@/components/Navbar";
 
 
 
@@ -15,6 +15,7 @@ export default function RootLayout({
       <body
       >
         <RecoilRoot>
+          <Navbar/>
           {children}
         </RecoilRoot>
       </body>
