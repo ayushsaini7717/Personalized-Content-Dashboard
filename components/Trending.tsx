@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {motion} from 'framer-motion';
 import { TrendingUp } from 'lucide-react';
 import Tabs from './Tabs';
@@ -9,13 +9,20 @@ import { useRecoilState } from 'recoil';
 import TabAtom from '@/recoil/tabAtom';
 import { useRecoilValue } from 'recoil';
 import ContentCard from './Card';
+import AllTrendingAtom from '@/recoil/AllTrendingAtom';
+import CardSkeleton from './CardSkeleton';
+
+
 
 const Trending = () => {
   const [newsData, setNewsData] = useRecoilState(NewsAtom);
   const [trendMovieData, setTrendMovieData] = useRecoilState(TrendMovieAtom);
+  const [allTrending, setAllTrending] = useRecoilState(AllTrendingAtom);
   const tab = useRecoilValue(TabAtom);
+  const [loading,SetLoading]=useState(false);
 
   useEffect(()=>{
+    SetLoading(true);
     const fetcher=async ()=>{
       const [res1, res2] = await Promise.all([
         fetch(`https://newsdata.io/api/1/news?apikey=${process.env.NEXT_PUBLIC_API_KEY}&language=en&category=top`, {
@@ -35,33 +42,34 @@ const Trending = () => {
 
     
       const [data1,data2] = await Promise.all([res1.json(), res2.json()]);
-  //     const data1=[{
-  //       "article_id": "eea55449f6da110fd2467483ad242fd4",
-  //       "title": "Eni signs first long-term U.S. LNG deal with Venture Global",
-  //       "link": "https://www.trend.az/business/4070716.html",
-  //       "keywords": [
-  //           "economy"
-  //       ],
-  //       "creator": null,
-  //       "description": null,
-  //       "content": "ONLY AVAILABLE IN PAID PLANS",
-  //       "pubDate": "2025-07-16 12:41:00",
-  //   }]
-  //   const data2=[{
-  //     "watchers": 2023,
-  //     "movie": {
-  //         "title": "How to Train Your Dragon",
-  //         "year": 2025,
-  //         "ids": {
-  //             "trakt": 873974,
-  //             "slug": "how-to-train-your-dragon-2025",
-  //             "imdb": "tt26743210",
-  //             "tmdb": 1087192
-  //         }
-  //     }
-  // }]
+
       setNewsData(data1.results);
       setTrendMovieData(data2);
+
+      const news = data1.results;
+      const movies = data2;
+
+      const maxLength = Math.max(news.length, movies.length);
+      let temp: any[] = [];
+
+      for (let i = 0; i < maxLength; i++) {
+        if (i < news.length) {
+          temp.push({
+            ...news[i],
+            type: "news"
+          });
+        }
+        if (i < movies.length) {
+          temp.push({
+            ...movies[i].movie,
+            watchers: movies[i].watchers, 
+            type: "movie"
+          });
+        }
+      }
+
+      setAllTrending(temp);
+      SetLoading(false);
     }
     fetcher();
   },[]);
@@ -91,38 +99,68 @@ const Trending = () => {
         <Tabs/>
       </div>
       
-
-{/* { Array.isArray(newsData) ? (
-  newsData.map((item, i) => (
-    <div key={i}>
-      <div>{item.article_id} - {item.title}</div>
-    </div>
-  ))
-) : tab === "TopMovies" ? (
-  <div>Top Movies content here</div>
-) : null} */}
 <div className='relative top-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full'>
-  {tab==="HotNews" ? newsData.map((item,i)=>{
-    return <div
-    key={i}>
-      <ContentCard
-        id={item.article_id}
-        title={item.title}
-        description={item.description===null ? "No description available": item.description}
-        frameUrl={item.link}
-        pubDate={item.pubDate}
-        keywords={item.keywords === null ? "recent" : item.keywords[0]}
-      />
-    </div>
-  }): tab==="TopMovies"? trendMovieData.map((item,i)=>{
-    return <div key={i}>
-      {item.watchers} 
-    </div>
-  }): <div>hi</div>}
+  {loading ? (
+            Array(24).fill(0).map((_, index) => (
+             <div className='min-w-[300px]'>
+                 <CardSkeleton key={`skeleton-${index}`} />
+             </div>
+            ))
+          ): tab==="HotNews" ? newsData.map((item,i)=>{
+            return <div
+            key={i}>
+              <ContentCard
+                id={item.article_id}
+                title={item.title}
+                description={item.description===null ? "No description available": item.description}
+                frameUrl={item.link ? item.link : null}
+                imageUrl={item.image_url ? item.image_url : null}
+                pubDate={item.pubDate}
+                keywords={item.keywords === null ? item.country[0] : item.keywords[0]}
+                source_name={item.source_name}
+              />
+            </div>
+          }): tab==="TopMovies"? trendMovieData.map((item,i)=>{
+            return <div key={i}>
+              <ContentCard
+                id={item.movie.ids.trakt}
+                title={item.movie.title}
+                description='This is a great movie that you might enjoy based on your preferences and viewing history.'
+                keywords='recommendation'
+                pubDate={item.movie.year}
+                imageUrl='/movieplaceholder.png'
+                watches={item.watchers ? item.watchers : 'n/a'}
+              /> 
+            </div>
+          }): allTrending.map((item:any,i:any)=>{
+                return <div key={i}>
+                  {item.type === "news" ? (
+                    <ContentCard
+                      id={item.article_id}
+                      title={item.title}
+                      description={item.description===null ? "No description available": item.description}
+                      frameUrl={item.link}
+                      pubDate={item.pubDate}
+                      keywords={item.keywords === null ? item.country[0] : item.keywords[0]}
+                      source_name={item.source_name}
+                    />
+                  ) : (
+                    <ContentCard
+                      id={item.ids.trakt}
+                      title={item.title}
+                      description='This is a great movie that you might enjoy based on your preferences and viewing history.'
+                      keywords='recommendation'
+                      pubDate={item.year}
+                      imageUrl='/movieplaceholder.png'
+                      watches={item.watchers ? item.watchers : 'n/a'}
+                    />
+                  )}
+                </div>
+              })}
+  
 </div>
 
-{newsData.length }
-{trendMovieData.length}
+
 
 
 
