@@ -1,12 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import feedDataState from '@/recoil/feedDataAtom';
 import ContentCard from './Card';
 import CardSkeleton from './CardSkeleton';
 import { motion } from 'framer-motion';
 import {Rss} from 'lucide-react';
+import PaginationComp from './PaginationComp';
+import paginationAtom from '@/recoil/paginationAtom';
 
 const mockData = [
   {
@@ -396,16 +398,24 @@ const mockData = [
 const Feed = () => {
     const [feed, setFeed] = useRecoilState(feedDataState);
     const [loading, setLoading] = useState(true);
+    const { feed: pagination } = useRecoilValue(paginationAtom);
+
+
+    const currentPage = pagination.currentPage;
+    const itemsPerPage = pagination.itemsPerPage;
   
     useEffect(() => {
       setLoading(true);
       const timer = setTimeout(() => {
-        setFeed(mockData[0].results); 
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+
+        setFeed(mockData[0].results.slice(start, end)); 
         setLoading(false);
       }, 2000);
     
       return () => clearTimeout(timer);
-    }, [setFeed]);
+    }, [setFeed,currentPage, itemsPerPage]);
   
     return (
       <motion.div
@@ -442,6 +452,9 @@ const Feed = () => {
               />
             ))
           )}
+        </div>
+        <div className='mt-6 flex justify-center'>
+            <PaginationComp/>
         </div>
       </motion.div>
     );
