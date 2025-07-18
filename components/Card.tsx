@@ -33,6 +33,11 @@ const ContentCard = ({id, title, description, imageUrl, onClick ,frameUrl,pubDat
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         className="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200 flex flex-col h-full"
+        onClick={()=>{
+          if(frameUrl){
+            window.open(frameUrl, '_blank');
+          }
+        }}
       >
         {imageUrl ? (
           <div className="relative w-full h-48">
