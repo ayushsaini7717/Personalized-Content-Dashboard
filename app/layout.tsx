@@ -15,7 +15,7 @@ export default function RootLayout({
   const hasMounted = useHasMounted();
 
   return (
-    <html lang="en" className="h-full w-full">
+    <html lang="en" className="h-full">
       <body className="min-h-screen w-full transition-colors duration-300 bg-white dark:bg-gray-950 text-black dark:text-white overflow-x-hidden">
         <RecoilRoot>
           <SidebarProvider>

@@ -2,7 +2,7 @@ import { atom } from 'recoil';
 
 const themeAtom = atom<'light' | 'dark'>({
   key: 'themeAtom',
-  default: 'light', 
+  default: 'dark', 
   effects: [
     ({ setSelf, onSet }) => {
       if (typeof window !== 'undefined') {
