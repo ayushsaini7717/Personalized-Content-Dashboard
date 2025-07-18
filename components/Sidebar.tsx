@@ -15,6 +15,7 @@ import {
 import { items } from "@/constants"
 import { useSetRecoilState } from "recoil"
 import currentViewState from "@/recoil/currentviewAtom";
+import { signOut } from "next-auth/react";
   
   export function AppSidebar() {
     const setCurrentView = useSetRecoilState(currentViewState);
@@ -36,7 +37,12 @@ import currentViewState from "@/recoil/currentviewAtom";
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a onClick={() => setCurrentView(item.title as any)}>
+                    <a onClick={() => {
+                      if(item.title==="Logout"){
+                        signOut();
+                      }
+                      setCurrentView(item.title as any);
+                      }}>
                       <item.icon />
                       <span>{item.title}</span>
                     </a>

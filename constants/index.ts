@@ -1,4 +1,4 @@
-import { Home, Search, Settings,TrendingUp,Heart } from "lucide-react"
+import { Home, Search, LogOut,TrendingUp,Heart } from "lucide-react"
 
 export const items = [
     {
@@ -18,7 +18,7 @@ export const items = [
       icon: Search,
     },
     {
-      title: "Settings",
-      icon: Settings,
+      title: "Logout",
+      icon: LogOut,
     },
   ]

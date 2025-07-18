@@ -4,9 +4,14 @@ import { motion } from 'framer-motion';
 import Achievements from '@/components/Achievements';
 import { ArrowRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { signIn, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
+  const { data: session, status } = useSession();
+  const router=useRouter();
+  
 
   useEffect(() => {
     setMounted(true);
@@ -50,8 +55,14 @@ export default function Home() {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.8 }}
       >
-        <button className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-md text-sm sm:text-base transition duration-300">
-          Get Started <ArrowRight className="w-4 h-4" />
+        <button onClick={()=>{
+          if(session){
+            router.push("/dashboard");
+          }else{
+            signIn("github");
+          }
+        }} className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-md text-sm sm:text-base transition duration-300">
+          {session ? "Dashboard" : "Sign In"} <ArrowRight className="w-4 h-4" />
         </button>
       </motion.div>
 

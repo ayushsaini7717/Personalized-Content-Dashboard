@@ -9,11 +9,14 @@ import themeAtom from '@/recoil/themeAtom';
 import { SidebarTrigger } from './ui/sidebar';
 import { usePathname } from 'next/navigation';
 import {motion} from 'framer-motion';
+import { signIn, signOut, useSession } from 'next-auth/react';
 
 const Navbar = () => {
   const [tab, setTab] = useRecoilState(currentViewState);
   const [query, setQuery] = useRecoilState(searchAtom);
   const [theme, setTheme] = useRecoilState(themeAtom);
+  const { data: session, status } = useSession()
+  
   const pathname= usePathname();
 
   const isDark = theme === 'dark';
@@ -55,7 +58,7 @@ const Navbar = () => {
             aria-label="Switch to dark mode"
           />
         )}
-        <div className='bg-blue-500 rounded p-2 text-white'>Get Started</div>
+        <div className='bg-blue-500 rounded p-2 text-white' onClick={()=>signIn('github')}>Sign In</div>
       </motion.div>
     </div>
   </nav>
@@ -105,6 +108,7 @@ const Navbar = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
+          className='flex gap-4'
         >
           {isDark ? (
             <Sun
@@ -119,6 +123,7 @@ const Navbar = () => {
               aria-label="Switch to dark mode"
             />
           )}
+          <div onClick={()=>signOut()} className='w-7 cursor-pointer h-7 flex justify-center items-center rounded-full bg-gray-200 text-black'>{session?.user?.name ? session.user.name[0] : session?.user?.email?.[0] ?? 'A'}</div>
         </motion.div>
       </div>
     </nav>
