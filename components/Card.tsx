@@ -33,11 +33,7 @@ const ContentCard = ({id, title, description, imageUrl, onClick ,frameUrl,pubDat
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         className="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200 flex flex-col h-full"
-        onClick={()=>{
-          if(frameUrl){
-            window.open(frameUrl, '_blank');
-          }
-        }}
+       
       >
         {imageUrl ? (
           <div className="relative w-full h-48">
@@ -70,7 +66,13 @@ const ContentCard = ({id, title, description, imageUrl, onClick ,frameUrl,pubDat
           <p className="text-sm text-gray-600 dark:text-gray-300"> {(description || "No description available").slice(0, 300)}
           {(description && description.length > 300) ? "..." : null}</p>
         </div>
-
+        {frameUrl ? <div className='px-4 mb-1 cursor-pointer text-blue-500' onClick={()=>{
+          if(frameUrl){
+            window.open(frameUrl, '_blank');
+          }
+        }}>
+          Read more...
+        </div>: null}
         {source_name ? <div className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-sm font-semibold flex justify-center">
              Source: {source_name}
           </div>: null}
