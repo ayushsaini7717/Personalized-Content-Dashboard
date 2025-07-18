@@ -5,20 +5,25 @@ import { RecoilRoot } from 'recoil';
 import Navbar from '@/components/Navbar';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import ThemeProvider from '@/components/themeprovider';
+import useHasMounted from '@/hooks/usehasmount';
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const hasMounted = useHasMounted();
+
   return (
-    <html lang="en" className="w-[100%]">
-      <body className="transition-colors duration-300 bg-white dark:bg-gray-950 text-black dark:text-white">
+    <html lang="en" className="h-full w-full">
+      <body className="min-h-screen w-full transition-colors duration-300 bg-white dark:bg-gray-950 text-black dark:text-white overflow-x-hidden">
         <RecoilRoot>
-          <ThemeProvider />
           <SidebarProvider>
-            <Navbar />
-            {children}
+            {hasMounted && <ThemeProvider />}
+            {hasMounted && <Navbar />}
+            <main className="min-h-[calc(100vh-4rem)] px-4">
+              {hasMounted ? children : null}
+            </main>
           </SidebarProvider>
         </RecoilRoot>
       </body>

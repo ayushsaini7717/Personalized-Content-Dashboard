@@ -1,18 +1,21 @@
 import { atom } from 'recoil';
 
-const getInitialTheme = (): 'light' | 'dark' => {
-  if (typeof window === 'undefined') return 'light';
-  const saved = localStorage.getItem('theme');
-  return saved === 'dark' ? 'dark' : 'light';
-};
-
 const themeAtom = atom<'light' | 'dark'>({
   key: 'themeAtom',
-  default: typeof window !== 'undefined' ? getInitialTheme() : 'light',
+  default: 'light', 
   effects: [
-    ({ onSet }) => {
+    ({ setSelf, onSet }) => {
+      if (typeof window !== 'undefined') {
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark' || saved === 'light') {
+          setSelf(saved);
+        }
+      }
+
       onSet((newTheme) => {
-        localStorage.setItem('theme', newTheme);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('theme', newTheme);
+        }
       });
     },
   ],
