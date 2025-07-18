@@ -27,7 +27,7 @@ const Page = () => {
 }
     
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <div className="flex flex-col items-center justify-center min-h-screen pt-20">
       {renderContent()}
     </div>
   )

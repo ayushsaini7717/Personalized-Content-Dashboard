@@ -7,16 +7,12 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <SidebarProvider>
       <div className="flex h-screen">
         <AppSidebar />
         <div className="flex-1 p-4">
-          <SidebarTrigger />
           {children}
         </div>
       </div>
-    </SidebarProvider>
   );
 }
-
 
