@@ -1,8 +1,10 @@
-import { atom } from "recoil";
+import { atom } from 'recoil';
 
-const feedDataState = atom<any[]>({
-    key: 'feedDataState',
-    default: [],
+const feedDataState = atom<any>({
+  key: 'feedDataState',
+  default: {
+    feed: [],
+  },
 });
 
 export default feedDataState;

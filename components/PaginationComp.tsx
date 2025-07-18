@@ -10,19 +10,22 @@ import {
 import { useRecoilState, useRecoilValue } from 'recoil';
 import paginationAtom from '@/recoil/paginationAtom';
 import TabAtom from '@/recoil/tabAtom';
+import currentViewState from '@/recoil/currentviewAtom';
+
 
 const PaginationComp = () => {
   const [pagination, setPagination] = useRecoilState(paginationAtom);
   const tab = useRecoilValue(TabAtom);
+  const view=useRecoilValue(currentViewState);
 
-  const tabKey = tab === "HotNews"
+  const tabKey = view ==="Feed" ? "feed":tab === "HotNews"
     ? "hotNews"
     : tab === "TopMovies"
     ? "trendingMovies"
     : "allTrending";
 
   const currentPage = pagination[tabKey].currentPage;
-
+  // allTrending
   const goToPage = (page: number) => {
     if (page < 1) return;
     setPagination((prev: typeof pagination) => ({

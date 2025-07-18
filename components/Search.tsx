@@ -19,6 +19,7 @@ const Search = () => {
     const fetchResults = async () => {
       if (!debouncedQuery) return;
       try {
+        localStorage.setItem('searchHistory', debouncedQuery);
         const res = await fetch(`https://newsdata.io/api/1/news?apikey=${process.env.NEXT_PUBLIC_API_KEY}&language=en&q=${debouncedQuery}`);
         const data = await res.json();
         setResults(data.results || []);
